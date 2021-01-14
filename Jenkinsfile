@@ -1,6 +1,6 @@
 // https://github.com/camunda/jenkins-global-shared-library
 // https://github.com/camunda/cambpm-jenkins-shared-library
-@Library(['camunda-ci', 'cambpm-jenkins-shared-library']) _
+@Library(['camunda-ci', 'cambpm-jenkins-shared-library@CAM-12991-cache-config-maps']) _
 
 def failedStageTypes = []
 
@@ -461,8 +461,8 @@ pipeline {
       }
       steps {
         script {
-          parallel(cambpmGetMatrixStages('engine-webapp-unit', failedStageTypes, { stageType, dbLabel ->
-            return cambpmWithLabelsList(cambpmGetLabels(stageType, 'cockroachdb'))
+          parallel(cambpmGetMatrixStages('engine-webapp-unit', failedStageTypes, { allowedLabels, dbLabel ->
+            return cambpmWithLabelsList(allowedLabels.minus('cockroachdb')) && cambpmWithLabels(cambpmGetDbType(dbLabel))
           }))
         }
       }
