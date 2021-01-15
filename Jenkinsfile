@@ -449,8 +449,8 @@ pipeline {
       }
       steps {
         script {
-          parallel(cambpmGetMatrixStages('engine-rest', failedStageTypes, { stageType, dbLabel ->
-            return cambpmWithLabels('rest-api')
+          parallel(cambpmGetMatrixStages('engine-rest', failedStageTypes, { allowedStageLabels, dbLabel ->
+            return cambpmWithLabelsList(allowedStageLabels)
           }))
         }
       }
@@ -461,8 +461,8 @@ pipeline {
       }
       steps {
         script {
-          parallel(cambpmGetMatrixStages('engine-webapp-unit', failedStageTypes, { allowedLabels, dbLabel ->
-            return cambpmWithLabelsList(allowedLabels.minus('cockroachdb')) && cambpmWithLabels(cambpmGetDbType(dbLabel))
+          parallel(cambpmGetMatrixStages('engine-webapp-unit', failedStageTypes, { allowedStageLabels, dbLabel ->
+            return cambpmWithLabelsList(allowedStageLabels.minus('cockroachdb')) && cambpmWithLabels(cambpmGetDbType(dbLabel))
           }))
         }
       }
